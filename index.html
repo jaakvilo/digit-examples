@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Ball Trajectory Visuals</title>
+  <style>
+    :root {
+      --bg: #f7f4ee;
+      --ink: #0f172a;
+      --grid: #d8d2c6;
+      --axis: #3f3f46;
+      --panel: #fffaf0;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "IBM Plex Sans", "Source Sans 3", system-ui, sans-serif;
+      background: radial-gradient(1200px 800px at 20% -10%, #fff, var(--bg));
+      color: var(--ink);
+      padding: 24px;
+    }
+    .wrap {
+      max-width: 980px;
+      margin: 0 auto;
+      display: grid;
+      gap: 16px;
+    }
+    h1 {
+      margin: 0;
+      font-weight: 600;
+      letter-spacing: 0.2px;
+      font-size: 26px;
+    }
+    .meta {
+      font-size: 14px;
+      color: #4b5563;
+    }
+    .card {
+      background: var(--panel);
+      border: 1px solid #e7e0d2;
+      border-radius: 14px;
+      padding: 16px;
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+    }
+    svg { width: 100%; height: auto; display: block; }
+    .legend {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 8px 12px;
+      margin-top: 8px;
+      font-size: 12px;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .swatch {
+      width: 18px;
+      height: 4px;
+      border-radius: 999px;
+    }
+    .note {
+      font-size: 12px;
+      color: #6b7280;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div>
+      <h1>10 Trajectories for Ball Throws</h1>
+      <div class="meta">Angle varies by throw. Speed varies by throw (km/h). Stronger color = faster throw.</div>
+    </div>
+    <div class="card">
+      <svg id="chart" viewBox="0 0 900 520" role="img" aria-label="Ball trajectory visualization"></svg>
+      <div class="legend" id="legend"></div>
+      <div class="note">Parameters: g = 9.8 m/s², time window = 0–10 s, horizontal range = 0–100 m.</div>
+    </div>
+  </div>
+
+  <script>
+    const cfg = {
+      g: 9.8,
+      tMax: 10,
+      xMax: 100,
+      yMax: 30,
+      padding: { left: 70, right: 30, top: 30, bottom: 60 }
+    };
+
+    const throws = [
+      { angle: 20, speedKmh: 45 },
+      { angle: 25, speedKmh: 55 },
+      { angle: 30, speedKmh: 62 },
+      { angle: 35, speedKmh: 70 },
+      { angle: 40, speedKmh: 78 },
+      { angle: 45, speedKmh: 85 },
+      { angle: 50, speedKmh: 92 },
+      { angle: 55, speedKmh: 98 },
+      { angle: 60, speedKmh: 105 },
+      { angle: 65, speedKmh: 112 }
+    ];
+
+    const svg = document.getElementById("chart");
+    const legend = document.getElementById("legend");
+
+    const width = 900;
+    const height = 520;
+
+    const inner = {
+      x0: cfg.padding.left,
+      y0: cfg.padding.top,
+      x1: width - cfg.padding.right,
+      y1: height - cfg.padding.bottom
+    };
+
+    const xScale = x => inner.x0 + (x / cfg.xMax) * (inner.x1 - inner.x0);
+    const yScale = y => inner.y1 - (y / cfg.yMax) * (inner.y1 - inner.y0);
+
+    function kmhToMs(kmh) {
+      return kmh / 3.6;
+    }
+
+    function trajectoryPoints(angleDeg, speedKmh) {
+      const v = kmhToMs(speedKmh);
+      const theta = (angleDeg * Math.PI) / 180;
+      const vx = v * Math.cos(theta);
+      const vy = v * Math.sin(theta);
+      const points = [];
+      const steps = 200;
+      for (let i = 0; i <= steps; i++) {
+        const t = (cfg.tMax / steps) * i;
+        const x = vx * t;
+        const y = vy * t - 0.5 * cfg.g * t * t;
+        if (x > cfg.xMax) break;
+        if (y < 0) {
+          if (points.length === 0) break;
+          points.push({ x, y: 0 });
+          break;
+        }
+        points.push({ x, y });
+      }
+      return points;
+    }
+
+    function pathFromPoints(points) {
+      return points
+        .map((p, i) => `${i === 0 ? "M" : "L"} ${xScale(p.x).toFixed(2)} ${yScale(p.y).toFixed(2)}`)
+        .join(" ");
+    }
+
+    function speedColor(speedKmh) {
+      const min = Math.min(...throws.map(t => t.speedKmh));
+      const max = Math.max(...throws.map(t => t.speedKmh));
+      const t = (speedKmh - min) / (max - min);
+      const hue = 18 + 200 * (1 - t);
+      const sat = 45 + 50 * t;
+      const light = 65 - 20 * t;
+      return `hsl(${hue.toFixed(0)}, ${sat.toFixed(0)}%, ${light.toFixed(0)}%)`;
+    }
+
+    function addEl(tag, attrs) {
+      const el = document.createElementNS("http://www.w3.org/2000/svg", tag);
+      Object.entries(attrs).forEach(([k, v]) => el.setAttribute(k, v));
+      svg.appendChild(el);
+      return el;
+    }
+
+    function drawGrid() {
+      for (let x = 0; x <= cfg.xMax; x += 10) {
+        addEl("line", {
+          x1: xScale(x),
+          y1: inner.y0,
+          x2: xScale(x),
+          y2: inner.y1,
+          stroke: "#e3ddcf",
+          "stroke-width": x === 0 ? 1.5 : 1
+        });
+      }
+      for (let y = 0; y <= cfg.yMax; y += 5) {
+        addEl("line", {
+          x1: inner.x0,
+          y1: yScale(y),
+          x2: inner.x1,
+          y2: yScale(y),
+          stroke: "#e3ddcf",
+          "stroke-width": y === 0 ? 1.5 : 1
+        });
+      }
+      addEl("rect", {
+        x: inner.x0,
+        y: inner.y0,
+        width: inner.x1 - inner.x0,
+        height: inner.y1 - inner.y0,
+        fill: "none",
+        stroke: "#3f3f46",
+        "stroke-width": 1.5
+      });
+    }
+
+    function drawAxesLabels() {
+      addEl("text", {
+        x: (inner.x0 + inner.x1) / 2,
+        y: height - 18,
+        "text-anchor": "middle",
+        "font-size": 13,
+        fill: "#374151"
+      }).textContent = "Distance (m)";
+
+      addEl("text", {
+        x: 18,
+        y: (inner.y0 + inner.y1) / 2,
+        "text-anchor": "middle",
+        "font-size": 13,
+        fill: "#374151",
+        transform: `rotate(-90 18 ${(inner.y0 + inner.y1) / 2})`
+      }).textContent = "Height (m)";
+
+      for (let x = 0; x <= cfg.xMax; x += 20) {
+        addEl("text", {
+          x: xScale(x),
+          y: inner.y1 + 18,
+          "text-anchor": "middle",
+          "font-size": 11,
+          fill: "#6b7280"
+        }).textContent = x.toString();
+      }
+
+      for (let y = 0; y <= cfg.yMax; y += 5) {
+        addEl("text", {
+          x: inner.x0 - 12,
+          y: yScale(y) + 4,
+          "text-anchor": "end",
+          "font-size": 11,
+          fill: "#6b7280"
+        }).textContent = y.toString();
+      }
+    }
+
+    function drawTrajectories() {
+      throws.forEach(throwSpec => {
+        const pts = trajectoryPoints(throwSpec.angle, throwSpec.speedKmh);
+        const color = speedColor(throwSpec.speedKmh);
+        addEl("path", {
+          d: pathFromPoints(pts),
+          fill: "none",
+          stroke: color,
+          "stroke-width": 2.5,
+          "stroke-linecap": "round"
+        });
+      });
+    }
+
+    function buildLegend() {
+      legend.innerHTML = "";
+      throws.forEach(throwSpec => {
+        const item = document.createElement("div");
+        item.className = "legend-item";
+        const sw = document.createElement("span");
+        sw.className = "swatch";
+        sw.style.background = speedColor(throwSpec.speedKmh);
+        const txt = document.createElement("span");
+        txt.textContent = `${throwSpec.angle}° @ ${throwSpec.speedKmh} km/h`;
+        item.appendChild(sw);
+        item.appendChild(txt);
+        legend.appendChild(item);
+      });
+    }
+
+    drawGrid();
+    drawAxesLabels();
+    drawTrajectories();
+    buildLegend();
+  </script>
+</body>
+</html>
