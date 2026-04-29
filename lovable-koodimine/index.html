@@ -1,0 +1,313 @@
+<!doctype html>
+<html lang="et">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Koodimine Lovable.dev platvormil</title>
+  <style>
+    :root {
+      --bg: #f6f8f5;
+      --panel: #ffffff;
+      --ink: #17202a;
+      --muted: #5d6773;
+      --line: #d8dfd5;
+      --accent: #0d766e;
+      --accent-soft: #dff5f1;
+      --warm: #8a4b16;
+      --warm-soft: #fff2dc;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "IBM Plex Sans", "Source Sans 3", system-ui, sans-serif;
+      color: var(--ink);
+      background: linear-gradient(180deg, #ffffff 0%, var(--bg) 44%, #eef7f5 100%);
+      padding: 24px;
+    }
+    main {
+      max-width: 1040px;
+      margin: 0 auto;
+      display: grid;
+      gap: 22px;
+    }
+    a {
+      color: var(--accent);
+      text-decoration-thickness: 1px;
+      text-underline-offset: 3px;
+    }
+    header {
+      display: grid;
+      gap: 10px;
+      padding: 8px 0 2px;
+    }
+    h1 {
+      margin: 0;
+      max-width: 840px;
+      font-size: clamp(32px, 5vw, 56px);
+      line-height: 1.02;
+      letter-spacing: 0;
+    }
+    h2 {
+      margin: 0 0 10px;
+      font-size: 24px;
+      letter-spacing: 0;
+    }
+    h3 {
+      margin: 0 0 8px;
+      font-size: 18px;
+      letter-spacing: 0;
+    }
+    p, li {
+      color: var(--muted);
+      line-height: 1.55;
+      font-size: 15px;
+    }
+    p { margin: 0; }
+    ul, ol {
+      margin: 0;
+      padding-left: 22px;
+    }
+    section {
+      display: grid;
+      gap: 12px;
+    }
+    .intro {
+      max-width: 780px;
+      font-size: 17px;
+    }
+    .band {
+      background: rgba(255, 255, 255, 0.78);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 18px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 12px;
+    }
+    .item {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 14px;
+      display: grid;
+      gap: 8px;
+    }
+    .note {
+      background: var(--warm-soft);
+      border-color: #e8c994;
+    }
+    .prompt {
+      color: var(--ink);
+      background: #f4fbfa;
+      border: 1px solid #b9deda;
+      border-radius: 6px;
+      padding: 10px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 13px;
+      line-height: 1.45;
+      white-space: pre-wrap;
+    }
+    .steps {
+      display: grid;
+      gap: 10px;
+      counter-reset: step;
+    }
+    .step {
+      display: grid;
+      grid-template-columns: 34px 1fr;
+      gap: 10px;
+      align-items: start;
+    }
+    .step::before {
+      counter-increment: step;
+      content: counter(step);
+      width: 28px;
+      height: 28px;
+      display: grid;
+      place-items: center;
+      color: #ffffff;
+      background: var(--accent);
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 13px;
+    }
+    .apps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 12px;
+    }
+    .app {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 14px;
+      display: grid;
+      gap: 8px;
+    }
+    .tagline {
+      color: var(--warm);
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .sources li {
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <a href="../">Tagasi näidete juurde</a>
+      <h1>Koodimine Lovable.dev platvormil</h1>
+      <p class="intro">Lovable on AI abil arendamise keskkond, kus rakendust kirjeldatakse loomulikus keeles ja platvorm loob veebirakenduse kasutajaliidese, loogika ning vajadusel andmebaasiühendused.</p>
+    </header>
+
+    <section class="band">
+      <h2>Mida on vaja teha, et Lovable’is rakendusi arendada?</h2>
+      <div class="steps">
+        <div class="step">
+          <div>
+            <h3>Loo konto ja alusta projekt</h3>
+            <p>Mine aadressile <a href="https://lovable.dev/">lovable.dev</a>, loo konto ning kirjelda esimese promptiga, mida rakendus peab tegema. Hea algusprompt nimetab kasutaja, eesmärgi, peamised vaated ja andmed.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div>
+            <h3>Kirjelda funktsioone väikeste sammudena</h3>
+            <p>Ära proovi kogu toodet ühe korraga valmis saada. Lisa vaated, vormid, tabelid, autentimine ja kujunduse muudatused järjest. Pärast iga muudatust testi eelvaates.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div>
+            <h3>Lisa andmed ja kasutajad</h3>
+            <p>Kui rakendus peab andmeid meeles pidama, ühenda Lovable Cloud või Supabase. Lovable oskab luua andmetabeleid, autentimist, failide üleslaadimist ja serveripoolseid funktsioone, aga turvareeglid tuleb enne päriskasutajaid üle vaadata.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div>
+            <h3>Hoia saladused serveris</h3>
+            <p>API võtmeid, Stripe’i võtmeid, OpenAI võtmeid ja muid paroole ei panda kunagi otse brauserikoodi. Salvesta need Lovable’i või Supabase’i secrets/edge functions lahenduses.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div>
+            <h3>Avalda ja uuenda</h3>
+            <p>Vajuta Lovable’i ülanurgas Publish. Avaldamine teeb hetkeversioonist veebirakenduse aadressil <code>nimi.lovable.app</code> või tasulise plaani korral oma domeenil. Hilisemad muudatused ei lähe automaatselt live’i: vajuta Publish ja seejärel Update.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Hea algusprompt</h2>
+      <div class="prompt">Tee eestikeelne veebirakendus gümnaasiumi õpilasele, kes õpib programmeerimist.
+Rakenduses on:
+- avaleht kolme kaardiga
+- ülesannete nimekiri
+- vorm, kuhu saab lisada uue ülesande pealkirja, kirjelduse ja raskusastme
+- mobiilis mugav kujundus
+- rahulik, selge visuaalne stiil
+
+Alusta ilma sisselogimiseta. Tee esmalt töötav prototüüp.</div>
+    </section>
+
+    <section class="grid">
+      <div class="item">
+        <h2>Enne avaldamist</h2>
+        <ul>
+          <li>Kontrolli, et testandmed ei sisaldaks päris isikuandmeid.</li>
+          <li>Kui kasutad andmebaasi, vaata üle lugemis- ja kirjutamisõigused.</li>
+          <li>Testi mobiilivaadet, tühje vorme, vigaseid sisendeid ja aeglast internetti.</li>
+          <li>Lisa lehele arusaadav pealkiri, kirjeldus, ikoon ja jagamispilt.</li>
+        </ul>
+      </div>
+      <div class="item note">
+        <h2>Piirangud</h2>
+        <p>Lovable sobib eriti hästi veebirakenduste, prototüüpide, tööriistade, dashboard’ide ja MVP-de jaoks. Väga keerulise backend’i, madala taseme mobiilifunktsioonide või suurte turvanõuetega toodete puhul on vaja arendaja ülevaatust.</p>
+      </div>
+    </section>
+
+    <section class="band">
+      <h2>Kuidas Lovable’is tehtud rakendus telefoni saada?</h2>
+      <div class="grid">
+        <div class="item">
+          <h3>Lihtsaim viis: ava veebiaadress telefonis</h3>
+          <ol>
+            <li>Avalda rakendus Lovable’is.</li>
+            <li>Saada õpilastele või testijatele avaldatud URL.</li>
+            <li>Ava link iPhone’is Safari või Androidis Chrome’iga.</li>
+          </ol>
+        </div>
+        <div class="item">
+          <h3>iPhone / iPad: lisa koduekraanile</h3>
+          <ol>
+            <li>Ava avaldatud rakendus Safaris.</li>
+            <li>Vajuta Share nuppu.</li>
+            <li>Vali Add to Home Screen.</li>
+            <li>Pane nimi ja vajuta Add.</li>
+          </ol>
+        </div>
+        <div class="item">
+          <h3>Android: lisa või installi</h3>
+          <ol>
+            <li>Ava avaldatud rakendus Chrome’is.</li>
+            <li>Vajuta kolme punktiga menüüd.</li>
+            <li>Vali Install app või Add to Home screen.</li>
+            <li>Kinnita installimine.</li>
+          </ol>
+        </div>
+        <div class="item">
+          <h3>App Store / Google Play</h3>
+          <p>Lovable’i avaldamine teeb veebirakenduse, mitte automaatselt natiivset iOS/Android äppi. Poodidesse jõudmiseks ekspordi kood ja paki see Capacitori, Median.co või muu wrapper’iga; seejärel tuleb teha Apple’i ja Google’i tavapärane allkirjastamine ning ülevaatus.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="band">
+      <h2>Näited Lovable abil tehtud rakendustest</h2>
+      <p>Allolevad näited on avalikest Lovable-kataloogidest. Need on head inspiratsiooniks, kuid enne klassis kasutamist kontrolli alati, kas URL töötab ja kas sisu sobib õppijatele.</p>
+      <div class="apps">
+        <div class="app">
+          <div class="tagline">Digitaalsed kaardid</div>
+          <h3>Warmly Cards</h3>
+          <p>AI abil isiklike õnnitluskaartide loomine. Idee sobib hästi näitama, kuidas tekstigeneraator, disain ja jagatav veebileht ühes tööriistas kokku saavad.</p>
+          <a href="https://www.warmly.cards/">www.warmly.cards</a>
+        </div>
+        <div class="app">
+          <div class="tagline">Disainitööriist</div>
+          <h3>Chromix</h3>
+          <p>AI-põhine värvipalettide generaator disaineritele ja arendajatele. Hea näide väikesest, selge kasutusjuhuga veebitööriistast.</p>
+          <a href="https://chromix.app/">chromix.app</a>
+        </div>
+        <div class="app">
+          <div class="tagline">Haridus / sport</div>
+          <h3>Platzreife.de</h3>
+          <p>Veebipõhine golfi teooriaeksami õppimise platvorm. Näitab, kuidas Lovable sobib õppematerjalide, testide ja õpivoogude prototüüpimiseks.</p>
+          <a href="https://www.platzreife.de/">www.platzreife.de</a>
+        </div>
+        <div class="app">
+          <div class="tagline">HR ja värbamine</div>
+          <h3>MatchWise</h3>
+          <p>AI ATS ehk kandidaatide valiku tööriist personalitiimidele. Hea näide ärirakendusest, kus on andmed, töövoog ja otsustamist toetav kasutajaliides.</p>
+          <a href="https://matchwise.app/">matchwise.app</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="band">
+      <h2>Allikad</h2>
+      <ul class="sources">
+        <li><a href="https://docs.lovable.dev/introduction/getting-started">Lovable Documentation: Quick start</a></li>
+        <li><a href="https://docs.lovable.dev/features/publish">Lovable Documentation: Publish your Lovable project</a></li>
+        <li><a href="https://docs.lovable.dev/integrations/supabase">Lovable Documentation: Supabase integration</a></li>
+        <li><a href="https://lovable.dev/faq/deployment/getting-started/publish-app-store">Lovable FAQ: App Store publishing</a></li>
+        <li><a href="https://madewithlovable.com/">Made with Lovable directory</a></li>
+      </ul>
+    </section>
+  </main>
+</body>
+</html>

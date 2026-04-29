@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="et">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Koodimine Claude Code'i abil</title>
+  <style>
+    :root {
+      --bg: #f8f6f2;
+      --panel: #ffffff;
+      --ink: #1c2430;
+      --muted: #626b76;
+      --line: #ded7cd;
+      --accent: #7b4b25;
+      --accent-soft: #f6eadf;
+      --cool: #245f69;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "IBM Plex Sans", "Source Sans 3", system-ui, sans-serif;
+      color: var(--ink);
+      background: linear-gradient(180deg, #ffffff 0%, var(--bg) 45%, #eef7f5 100%);
+      padding: 24px;
+    }
+    main {
+      max-width: 980px;
+      margin: 0 auto;
+      display: grid;
+      gap: 22px;
+    }
+    a {
+      color: var(--cool);
+      text-decoration-thickness: 1px;
+      text-underline-offset: 3px;
+    }
+    header {
+      display: grid;
+      gap: 10px;
+      padding: 8px 0 2px;
+    }
+    h1 {
+      margin: 0;
+      max-width: 820px;
+      font-size: clamp(32px, 5vw, 56px);
+      line-height: 1.02;
+      letter-spacing: 0;
+    }
+    h2 {
+      margin: 0 0 10px;
+      font-size: 24px;
+      letter-spacing: 0;
+    }
+    h3 {
+      margin: 0 0 7px;
+      font-size: 18px;
+      letter-spacing: 0;
+    }
+    p, li {
+      color: var(--muted);
+      line-height: 1.55;
+      font-size: 15px;
+    }
+    p { margin: 0; }
+    ul, ol {
+      margin: 0;
+      padding-left: 22px;
+    }
+    code {
+      color: var(--ink);
+      background: #ffffff;
+      border: 1px solid var(--line);
+      border-radius: 5px;
+      padding: 2px 5px;
+    }
+    section {
+      display: grid;
+      gap: 12px;
+    }
+    .intro {
+      max-width: 760px;
+      font-size: 17px;
+    }
+    .band {
+      background: rgba(255, 255, 255, 0.84);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 18px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(245px, 1fr));
+      gap: 12px;
+    }
+    .item {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 14px;
+      display: grid;
+      gap: 8px;
+    }
+    .prompt {
+      color: var(--ink);
+      background: var(--accent-soft);
+      border: 1px solid #dfc4a9;
+      border-radius: 6px;
+      padding: 10px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 13px;
+      line-height: 1.45;
+      white-space: pre-wrap;
+    }
+    .steps {
+      display: grid;
+      gap: 10px;
+      counter-reset: step;
+    }
+    .step {
+      display: grid;
+      grid-template-columns: 34px 1fr;
+      gap: 10px;
+      align-items: start;
+    }
+    .step::before {
+      counter-increment: step;
+      content: counter(step);
+      width: 28px;
+      height: 28px;
+      display: grid;
+      place-items: center;
+      color: #ffffff;
+      background: var(--accent);
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 13px;
+    }
+    .note {
+      border-color: #a6ccd0;
+      background: #eef9f8;
+    }
+    .sources li {
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <a href="../">Tagasi näidete juurde</a>
+      <h1>Koodimine Claude Code'i abil</h1>
+      <p class="intro">Claude Code on Anthropicu agentne kooditööriist, mis oskab koodibaasi lugeda, faile muuta, käske käivitada ja arendustööriistadega ühenduda. Seda saab kasutada terminalis, IDE-s, desktop app’is ja veebis.</p>
+    </header>
+
+    <section class="band">
+      <h2>Kaks põhilist kasutusviisi</h2>
+      <div class="grid">
+        <div class="item">
+          <h3>Claude Code app</h3>
+          <p>Desktop app sobib siis, kui tahad visuaalselt üle vaadata diffe, hoida mitut sessiooni kõrvuti ja käivitada Claude Code’i väljaspool terminali või IDE-d. Paigalda Claude’i rakendus, logi sisse ja ava Code tab.</p>
+        </div>
+        <div class="item">
+          <h3>Claude Code CLI</h3>
+          <p>CLI sobib siis, kui töötad otse projektikaustas terminaliga. Claude saab lugeda faile, teha muudatusi, käivitada teste ja aidata käsurealt korduvaid arendustöid automatiseerida.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="band">
+      <h2>CLI kiire algus</h2>
+      <div class="steps">
+        <div class="step">
+          <div>
+            <h3>Kontrolli eeldusi</h3>
+            <p>Vaja on Node.js 18 või uuemat ning Claude.ai või Anthropic Console kontot.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div>
+            <h3>Paigalda Claude Code</h3>
+            <p>Ametlik dokumentatsioon näitab npm-paigaldust: <code>npm install -g @anthropic-ai/claude-code</code>. Uuemates keskkondades võib olla saadaval ka native installer.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div>
+            <h3>Ava oma projekt</h3>
+            <p>Mine Git-repo kausta: <code>cd minu-projekt</code>. Seejärel käivita <code>claude</code> ja logi esimesel kasutusel sisse.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div>
+            <h3>Alusta väikese ülesandega</h3>
+            <p>Küsi esmalt selgitust või väikest muudatust. Näiteks: “Selgita selle projekti struktuuri” või “Lisa README-sse käivitamise juhis”.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Näidiskäsud CLI jaoks</h2>
+      <div class="prompt"># Interaktiivne sessioon projektikaustas
+claude
+
+# Alusta sessiooni konkreetse küsimusega
+claude "explain this project"
+
+# Küsi vastus ja lõpeta kohe
+claude -p "explain this function"
+
+# Anna faili sisu stdin kaudu
+cat logs.txt | claude -p "explain the error"
+
+# Jätka viimast vestlust selles kaustas
+claude -c
+
+# Uuenda Claude Code'i
+claude update</div>
+    </section>
+
+    <section class="grid">
+      <div class="item">
+        <h2>Hea ülesanne Claude Code'ile</h2>
+        <div class="prompt">Vaata seda repo.
+Lisa uus alamprojekt eraldi kausta.
+Hoia avalehe kaartide stiil sama.
+Ära muuda olemasolevate näidete loogikat.
+Lõpus käivita lingikontroll ja ütle, mis muutus.</div>
+      </div>
+      <div class="item">
+        <h2>Milleks sobib?</h2>
+        <ul>
+          <li>Koodibaasi tundmaõppimine.</li>
+          <li>Bugide parandamine ja veateadete seletamine.</li>
+          <li>Väikeste funktsioonide lisamine.</li>
+          <li>Testide, dokumentatsiooni ja release note’ide kirjutamine.</li>
+          <li>Korduvate käsurea tööde automatiseerimine.</li>
+        </ul>
+      </div>
+      <div class="item note">
+        <h2>Ohutus</h2>
+        <ul>
+          <li>Kontrolli enne alustamist <code>git status</code>.</li>
+          <li>Ära anna prompti paroole, võtmeid ega privaatseid andmeid.</li>
+          <li>Vaata diff enne commit’i üle.</li>
+          <li>Ole ettevaatlik käsuga, mis jätab õiguste küsimise vahele.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="band">
+      <h2>App'i töövoog</h2>
+      <ol>
+        <li>Laadi alla ja ava Claude desktop app.</li>
+        <li>Logi sisse Claude’i kontoga.</li>
+        <li>Ava Code tab ja vali projekt või sessioon.</li>
+        <li>Kirjelda töö väikeste sammudena.</li>
+        <li>Vaata visuaalselt üle muudatused, diff ja testitulemused.</li>
+      </ol>
+    </section>
+
+    <section class="band">
+      <h2>Allikad</h2>
+      <ul class="sources">
+        <li><a href="https://code.claude.com/docs/en/overview">Claude Code Docs: overview</a></li>
+        <li><a href="https://code.claude.com/docs/en/cli-usage">Claude Code Docs: CLI reference</a></li>
+        <li><a href="https://docs.anthropic.com/en/docs/claude-code/getting-started">Anthropic Docs: set up Claude Code</a></li>
+      </ul>
+    </section>
+  </main>
+</body>
+</html>

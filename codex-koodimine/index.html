@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="et">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Koodimine Codexi abil</title>
+  <style>
+    :root {
+      --bg: #f6f8fb;
+      --panel: #ffffff;
+      --ink: #17202a;
+      --muted: #5d6773;
+      --line: #d8dde8;
+      --accent: #315f86;
+      --accent-soft: #e7f1f9;
+      --warm: #7a4b17;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "IBM Plex Sans", "Source Sans 3", system-ui, sans-serif;
+      color: var(--ink);
+      background: linear-gradient(180deg, #ffffff 0%, var(--bg) 44%, #edf5f8 100%);
+      padding: 24px;
+    }
+    main {
+      max-width: 980px;
+      margin: 0 auto;
+      display: grid;
+      gap: 22px;
+    }
+    a {
+      color: var(--accent);
+      text-decoration-thickness: 1px;
+      text-underline-offset: 3px;
+    }
+    header {
+      display: grid;
+      gap: 10px;
+      padding: 8px 0 2px;
+    }
+    h1 {
+      margin: 0;
+      max-width: 800px;
+      font-size: clamp(32px, 5vw, 56px);
+      line-height: 1.02;
+      letter-spacing: 0;
+    }
+    h2 {
+      margin: 0 0 10px;
+      font-size: 24px;
+      letter-spacing: 0;
+    }
+    h3 {
+      margin: 0 0 7px;
+      font-size: 18px;
+      letter-spacing: 0;
+    }
+    p, li {
+      color: var(--muted);
+      line-height: 1.55;
+      font-size: 15px;
+    }
+    p { margin: 0; }
+    ul, ol {
+      margin: 0;
+      padding-left: 22px;
+    }
+    code {
+      color: var(--ink);
+      background: #ffffff;
+      border: 1px solid var(--line);
+      border-radius: 5px;
+      padding: 2px 5px;
+    }
+    section {
+      display: grid;
+      gap: 12px;
+    }
+    .intro {
+      max-width: 760px;
+      font-size: 17px;
+    }
+    .band {
+      background: rgba(255, 255, 255, 0.82);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 18px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(245px, 1fr));
+      gap: 12px;
+    }
+    .item {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 14px;
+      display: grid;
+      gap: 8px;
+    }
+    .prompt {
+      color: var(--ink);
+      background: var(--accent-soft);
+      border: 1px solid #b7cee2;
+      border-radius: 6px;
+      padding: 10px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 13px;
+      line-height: 1.45;
+      white-space: pre-wrap;
+    }
+    .steps {
+      display: grid;
+      gap: 10px;
+      counter-reset: step;
+    }
+    .step {
+      display: grid;
+      grid-template-columns: 34px 1fr;
+      gap: 10px;
+      align-items: start;
+    }
+    .step::before {
+      counter-increment: step;
+      content: counter(step);
+      width: 28px;
+      height: 28px;
+      display: grid;
+      place-items: center;
+      color: #ffffff;
+      background: var(--accent);
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 13px;
+    }
+    .note {
+      border-color: #e6c98f;
+      background: #fff7e7;
+    }
+    .note h3 {
+      color: var(--warm);
+    }
+    .sources li {
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <a href="../">Tagasi näidete juurde</a>
+      <h1>Koodimine Codexi abil</h1>
+      <p class="intro">Codex on OpenAI koodiagent, mis aitab olemasolevas projektis koodi lugeda, muuta, testida ja parandada. Seda saab kasutada paarisprogrammeerijana terminalis või rakenduses, või anda talle taustal väiksemaid arendustöid.</p>
+    </header>
+
+    <section class="band">
+      <h2>Kiire töövoog</h2>
+      <div class="steps">
+        <div class="step">
+          <div>
+            <h3>Ava projektikaust</h3>
+            <p>Kõige parem on töötada Git-repos. Enne alustamist vaata, mis seisus projekt on: <code>git status</code>.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div>
+            <h3>Anna Codexile konkreetne ülesanne</h3>
+            <p>Kirjelda, mida muuta, kus see asub ja kuidas tulemust kontrollida. Hea ülesanne on väike: üks parandus, üks leht, üks funktsioon või üks test.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div>
+            <h3>Lase Codexil koodibaasi uurida</h3>
+            <p>Codex loeb faile, otsib mustreid ja pakub lahenduse. Kui ta teeb muudatusi, kontrolli neid diff’ist ja küsi vajadusel selgitust.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div>
+            <h3>Käivita testid või programm</h3>
+            <p>Palun Codexil käivitada sobivad testid, lintimine või käsitsi kontroll. Kui test ebaõnnestub, lase tal viga uurida ja parandada.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div>
+            <h3>Vaata muudatus üle ja salvesta</h3>
+            <p>Agent ei asenda vastutust. Loe muudatused läbi, testi tähtsad kasutuslood ning tee commit alles siis, kui tulemus on arusaadav.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Hea ülesande näide</h2>
+      <div class="prompt">Lisa sellele repo avalehele uus kaart alamprojekti jaoks.
+Tee eraldi kaust `minu-naide/` koos lihtsa `index.html` failiga.
+Hoia kujundus sama stiiliga nagu teistel kaartidel.
+Pärast muudatust kontrolli, et kõik kohalikud lingid töötavad.</div>
+    </section>
+
+    <section class="grid">
+      <div class="item">
+        <h2>Milleks Codex sobib?</h2>
+        <ul>
+          <li>Võõra koodibaasi selgitamine.</li>
+          <li>Väikeste funktsioonide lisamine.</li>
+          <li>Vigade otsimine ja parandamine.</li>
+          <li>Testide kirjutamine ja käivitamine.</li>
+          <li>README, juhiste ja kommentaaride korrastamine.</li>
+        </ul>
+      </div>
+      <div class="item">
+        <h2>Head harjumused</h2>
+        <ul>
+          <li>Tee enne suuremat tööd uus Git branch.</li>
+          <li>Küsi Codexilt enne muutmist plaani, kui ülesanne on segane.</li>
+          <li>Ära anna paroole, privaatseid võtmeid ega tundlikke andmeid prompti.</li>
+          <li>Ära nõustu pimesi suurte kustutuste või refaktoritega.</li>
+          <li>Küsi lõpus: mis muutus ja kuidas seda kontrolliti?</li>
+        </ul>
+      </div>
+      <div class="item note">
+        <h3>Oluline</h3>
+        <p>Codex võib koodi muuta ja käske käivitada. Õpilastega kasutades tasub alustada väikestest projektidest ning hoida Git ajalugu alles, et alati saaks vaadata, mis muutus.</p>
+      </div>
+    </section>
+
+    <section class="band">
+      <h2>Näidiskäsud õpilasele</h2>
+      <div class="prompt">git clone https://github.com/jaakvilo/digit-examples.git
+cd digit-examples
+git status
+
+# Seejärel ava projekt Codexis ja küsi:
+# "Selgita selle repo struktuuri lühidalt."
+# "Lisa uus lihtne näide eraldi kausta."
+# "Kontrolli, et HTML-lingid töötavad."</div>
+    </section>
+
+    <section class="band">
+      <h2>Allikad</h2>
+      <ul class="sources">
+        <li><a href="https://openai.com/codex">OpenAI: Codex</a></li>
+        <li><a href="https://help.openai.com/en/articles/11369540-codex-in-chatgpt">OpenAI Help: Using Codex with your ChatGPT plan</a></li>
+        <li><a href="https://help.openai.com/en/articles/11096431-openai-codex-ci-getting-started">OpenAI Help: Codex CLI getting started</a></li>
+      </ul>
+    </section>
+  </main>
+</body>
+</html>

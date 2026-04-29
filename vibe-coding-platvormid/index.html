@@ -1,0 +1,368 @@
+<!doctype html>
+<html lang="et">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Vibe coding platvormid tudengitele</title>
+  <style>
+    :root {
+      --bg: #f7f4ee;
+      --panel: #ffffff;
+      --ink: #17202a;
+      --muted: #5d6773;
+      --line: #ded8ca;
+      --accent: #245f69;
+      --accent-soft: #e7f4f3;
+      --strong: #0f766e;
+      --caution: #8a4b16;
+      --caution-soft: #fff4df;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "IBM Plex Sans", "Source Sans 3", system-ui, sans-serif;
+      color: var(--ink);
+      background: linear-gradient(180deg, #ffffff 0%, var(--bg) 42%, #edf7f5 100%);
+      padding: 24px;
+    }
+    main {
+      max-width: 1120px;
+      margin: 0 auto;
+      display: grid;
+      gap: 22px;
+    }
+    a {
+      color: var(--accent);
+      text-decoration-thickness: 1px;
+      text-underline-offset: 3px;
+    }
+    header {
+      display: grid;
+      gap: 10px;
+      padding: 8px 0 2px;
+    }
+    h1 {
+      margin: 0;
+      max-width: 860px;
+      font-size: clamp(32px, 5vw, 56px);
+      line-height: 1.02;
+      letter-spacing: 0;
+    }
+    h2 {
+      margin: 0 0 10px;
+      font-size: 24px;
+      letter-spacing: 0;
+    }
+    h3 {
+      margin: 0;
+      font-size: 19px;
+      line-height: 1.2;
+      letter-spacing: 0;
+    }
+    p, li {
+      color: var(--muted);
+      line-height: 1.55;
+      font-size: 15px;
+    }
+    p { margin: 0; }
+    ul, ol {
+      margin: 0;
+      padding-left: 22px;
+    }
+    section {
+      display: grid;
+      gap: 12px;
+    }
+    .intro {
+      max-width: 780px;
+      font-size: 17px;
+    }
+    .band {
+      background: rgba(255, 255, 255, 0.82);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 18px;
+    }
+    .platforms {
+      display: grid;
+      gap: 12px;
+    }
+    .platform {
+      display: grid;
+      grid-template-columns: 52px 1fr;
+      gap: 12px;
+      align-items: start;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 14px;
+    }
+    .rank {
+      width: 38px;
+      height: 38px;
+      display: grid;
+      place-items: center;
+      color: #ffffff;
+      background: var(--accent);
+      border-radius: 999px;
+      font-weight: 700;
+    }
+    .body {
+      display: grid;
+      gap: 9px;
+    }
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      font-size: 12px;
+    }
+    .tag {
+      border: 1px solid #9bc3c4;
+      border-radius: 999px;
+      padding: 3px 8px;
+      background: #eef9f7;
+      color: #164e63;
+    }
+    .fit {
+      color: var(--strong);
+      font-weight: 700;
+    }
+    .cols {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 10px;
+    }
+    .mini {
+      background: #fbfcfb;
+      border: 1px solid #e2e6df;
+      border-radius: 8px;
+      padding: 12px;
+    }
+    .mini strong {
+      color: var(--ink);
+    }
+    .note {
+      border-color: #e6c98f;
+      background: var(--caution-soft);
+    }
+    .note h2 {
+      color: var(--caution);
+    }
+    .sources li {
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <a href="../">Tagasi näidete juurde</a>
+      <h1>Vibe coding platvormid tudengitele</h1>
+      <p class="intro">Allpool on soovituslik järjekord platvormidest, mida tudengid saavad kasutada rakenduste prototüüpimiseks, koodi uurimiseks ja väikeste projektide ehitamiseks. Järjestus eelistab õppetöö jaoks kasulikkust, ligipääsetavust, kontrollitavust ja seda, kui hästi tudeng saab aru, mis tegelikult valmis tehti.</p>
+    </header>
+
+    <section class="band note">
+      <h2>Kuidas seda nimekirja lugeda?</h2>
+      <p>Esimesed valikud sobivad kõige paremini kursuse algusesse ja väikestesse projektidesse. Madalamal olevad tööriistad ei ole halvad; need on lihtsalt kitsama kasutusjuhuga, nõuavad rohkem tehnilist tausta või võivad õppetöös kergemini kulusid ja segadust tekitada.</p>
+    </section>
+
+    <section class="platforms" aria-label="Soovitatud platvormid">
+      <article class="platform">
+        <div class="rank">1</div>
+        <div class="body">
+          <h3>Lovable.dev</h3>
+          <p class="fit">Parim esimeseks veebirakenduse prototüübiks.</p>
+          <div class="meta">
+            <span class="tag">veebirakendus</span>
+            <span class="tag">algajale sobiv</span>
+            <span class="tag">avaldamine</span>
+          </div>
+          <div class="cols">
+            <div class="mini"><strong>Tugevused:</strong> väga kiire algus; ilusad veebiliidesed; avaldamine otse URL-ile; sobib ideest MVP-ni liikumiseks.</div>
+            <div class="mini"><strong>Nõrkused:</strong> keerukam backend ja turvareeglid vajavad kontrolli; App Store / Google Play jaoks on vaja eraldi wrapper’it; tasuta piirangud võivad kiiresti ette tulla.</div>
+          </div>
+        </div>
+      </article>
+
+      <article class="platform">
+        <div class="rank">2</div>
+        <div class="body">
+          <h3>OpenAI Codex</h3>
+          <p class="fit">Parim siis, kui tudeng töötab päris Git-repos ja tahab aru saada koodist.</p>
+          <div class="meta">
+            <span class="tag">repo</span>
+            <span class="tag">testid</span>
+            <span class="tag">agent</span>
+          </div>
+          <div class="cols">
+            <div class="mini"><strong>Tugevused:</strong> tugev koodibaasi lugemisel, muutmisel ja testimisel; sobib PR-ide, refaktorite ja dokumentatsiooni jaoks; hea ülevaade terminali- ja testilogidest.</div>
+            <div class="mini"><strong>Nõrkused:</strong> vajab Git’i ja arendustöövoo mõistmist; algajale vähem “maagiline” kui Lovable; muudatused tuleb alati üle vaadata.</div>
+          </div>
+        </div>
+      </article>
+
+      <article class="platform">
+        <div class="rank">3</div>
+        <div class="body">
+          <h3>Claude Code</h3>
+          <p class="fit">Väga tugev terminali, app’i ja IDE-põhise paarisprogrammeerimise jaoks.</p>
+          <div class="meta">
+            <span class="tag">CLI</span>
+            <span class="tag">desktop app</span>
+            <span class="tag">IDE</span>
+          </div>
+          <div class="cols">
+            <div class="mini"><strong>Tugevused:</strong> hea koodibaasi mõistmine; töötab terminalis ja app’is; oskab faile muuta, käske käivitada ja jätkata varasemaid sessioone.</div>
+            <div class="mini"><strong>Nõrkused:</strong> vajab paigaldust ja kontot; käsureal töötamine võib algajale olla järsk; õiguste ja käskude kinnitamisega peab ettevaatlik olema.</div>
+          </div>
+        </div>
+      </article>
+
+      <article class="platform">
+        <div class="rank">4</div>
+        <div class="body">
+          <h3>Replit Agent</h3>
+          <p class="fit">Hea brauseripõhiseks õppimiseks, kus arenduskeskkonda ei taha kohalikku arvutisse paigaldada.</p>
+          <div class="meta">
+            <span class="tag">brauser</span>
+            <span class="tag">hosting</span>
+            <span class="tag">algaja</span>
+          </div>
+          <div class="cols">
+            <div class="mini"><strong>Tugevused:</strong> kõik töötab brauseris; saab kiiresti jagada ja käivitada; sobib väikesteks veebirakendusteks, botideks ja andmeprojektideks.</div>
+            <div class="mini"><strong>Nõrkused:</strong> platvormikeskne töövoog; suuremate projektide puhul võib muutuda segaseks; tasuta/piiratud ressursid sõltuvad Repliti plaanidest.</div>
+          </div>
+        </div>
+      </article>
+
+      <article class="platform">
+        <div class="rank">5</div>
+        <div class="body">
+          <h3>Cursor</h3>
+          <p class="fit">Parim tudengile, kes juba kasutab VS Code’i või tahab päriselt arendajalikult koodi kirjutada.</p>
+          <div class="meta">
+            <span class="tag">IDE</span>
+            <span class="tag">autocomplete</span>
+            <span class="tag">agent mode</span>
+          </div>
+          <div class="cols">
+            <div class="mini"><strong>Tugevused:</strong> väga hea koodiredaktor; tunneb projekti konteksti; Agent, Ctrl/Cmd+K ja autocomplete teevad igapäevase kirjutamise kiireks.</div>
+            <div class="mini"><strong>Nõrkused:</strong> eeldab rohkem programmeerimisoskust; uue rakenduse “nullist valmis” kogemus pole nii sirgjooneline kui Lovable’is; mudelite ja limiitide valik võib segadust tekitada.</div>
+          </div>
+        </div>
+      </article>
+
+      <article class="platform">
+        <div class="rank">6</div>
+        <div class="body">
+          <h3>Bolt.new</h3>
+          <p class="fit">Väga kiire brauseris prototüüpimiseks, eriti JavaScripti/Node’i projektide puhul.</p>
+          <div class="meta">
+            <span class="tag">browser IDE</span>
+            <span class="tag">Node.js</span>
+            <span class="tag">prototüüp</span>
+          </div>
+          <div class="cols">
+            <div class="mini"><strong>Tugevused:</strong> töötab otse brauseris; rakendus on kohe klikitav; hea hackathon’i ja demo jaoks.</div>
+            <div class="mini"><strong>Nõrkused:</strong> tokeni-/krediidikulu võib üllatada; keerukate paranduste puhul võib minna ringiratast; õpilane peab õppima muudatusi kontrollima.</div>
+          </div>
+        </div>
+      </article>
+
+      <article class="platform">
+        <div class="rank">7</div>
+        <div class="body">
+          <h3>Base44</h3>
+          <p class="fit">Hea “kirjelda äppi ja avalda” tüüpi tööriist, eriti ärirakenduste ja lihtsate sisetööriistade jaoks.</p>
+          <div class="meta">
+            <span class="tag">no-code</span>
+            <span class="tag">backend</span>
+            <span class="tag">publish</span>
+          </div>
+          <div class="cols">
+            <div class="mini"><strong>Tugevused:</strong> lubab luua täisrakendusi koos autentimise, andmete, hosting’u ja domeeniga; sobib ideede kiireks testimiseks.</div>
+            <div class="mini"><strong>Nõrkused:</strong> platvormilukustus on tugevam; koodi õppimise vaade võib jääda nõrgemaks; kulud ja plaanid tuleb enne klassikasutust üle vaadata.</div>
+          </div>
+        </div>
+      </article>
+
+      <article class="platform">
+        <div class="rank">8</div>
+        <div class="body">
+          <h3>Vercel v0</h3>
+          <p class="fit">Parim UI ja React-komponentide kiireks visandamiseks.</p>
+          <div class="meta">
+            <span class="tag">React</span>
+            <span class="tag">UI</span>
+            <span class="tag">Vercel</span>
+          </div>
+          <div class="cols">
+            <div class="mini"><strong>Tugevused:</strong> tugev kasutajaliidese loomisel; sobib Tailwind/shadcn/React õppimiseks; hea disaini- ja frontend-kursusele.</div>
+            <div class="mini"><strong>Nõrkused:</strong> pole alati parim täisrakenduse backend’i loomiseks; eeldab Reacti ökosüsteemi mõistmist; vajab tihti käsitsi integreerimist.</div>
+          </div>
+        </div>
+      </article>
+
+      <article class="platform">
+        <div class="rank">9</div>
+        <div class="body">
+          <h3>GitHub Copilot</h3>
+          <p class="fit">Hea valik, kui kursus käib GitHubis ja tudengid kasutavad VS Code’i.</p>
+          <div class="meta">
+            <span class="tag">GitHub</span>
+            <span class="tag">VS Code</span>
+            <span class="tag">PR</span>
+          </div>
+          <div class="cols">
+            <div class="mini"><strong>Tugevused:</strong> tugev integratsioon GitHubi, issue’de, PR-ide ja VS Code’iga; sobib olemasoleva arendustöövoo juurde.</div>
+            <div class="mini"><strong>Nõrkused:</strong> agentse töö võimekus sõltub plaanist ja seadistusest; algajale võib GitHubi töövoog enne koodi ennast liiga palju tähelepanu võtta.</div>
+          </div>
+        </div>
+      </article>
+
+      <article class="platform">
+        <div class="rank">10</div>
+        <div class="body">
+          <h3>Windsurf</h3>
+          <p class="fit">Hea alternatiiv Cursorile, kui soovitakse agentset IDE-kogemust ja Cascade’i töövoogu.</p>
+          <div class="meta">
+            <span class="tag">IDE</span>
+            <span class="tag">Cascade</span>
+            <span class="tag">agent</span>
+          </div>
+          <div class="cols">
+            <div class="mini"><strong>Tugevused:</strong> Cascade mõistab kasutaja tegevuste konteksti; Code/Chat režiimid; terminali, plaanide ja töövoogude tugi.</div>
+            <div class="mini"><strong>Nõrkused:</strong> teine eraldi IDE, mida peab õppima; klassis on raskem standardiseerida, kui osa tudengeid kasutab VS Code’i, osa Windsurfi.</div>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <section class="band">
+      <h2>Kiirsoovitus kursuse jaoks</h2>
+      <ol>
+        <li>Esimene nädal: Lovable või Replit Agent, et kõik näeksid kiiresti töötavat tulemust.</li>
+        <li>Kui projekt jõuab Git-reposse: Codex või Claude Code, et õppida koodi lugema, muutma ja testima.</li>
+        <li>Kui tudeng kirjutab juba ise koodi: Cursor, GitHub Copilot või Windsurf.</li>
+        <li>Kui fookus on UI-l: Vercel v0.</li>
+        <li>Kui fookus on kiirel ärirakenduse prototüübil: Base44 või Bolt.new.</li>
+      </ol>
+    </section>
+
+    <section class="band">
+      <h2>Allikad</h2>
+      <ul class="sources">
+        <li><a href="https://openai.com/codex">OpenAI Codex</a></li>
+        <li><a href="https://code.claude.com/docs/en/overview">Claude Code Docs</a></li>
+        <li><a href="https://docs.lovable.dev/introduction/getting-started">Lovable Docs</a></li>
+        <li><a href="https://replit.com/products/agent">Replit Agent</a></li>
+        <li><a href="https://cursor.com/features">Cursor features</a></li>
+        <li><a href="https://docs.windsurf.com/windsurf/cascade">Windsurf Cascade docs</a></li>
+        <li><a href="https://docs.github.com/en/copilot/concepts/coding-agent/about-copilot-coding-agent">GitHub Copilot coding agent docs</a></li>
+        <li><a href="https://base44.com/">Base44</a></li>
+      </ul>
+    </section>
+  </main>
+</body>
+</html>

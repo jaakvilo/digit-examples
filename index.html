@@ -82,6 +82,22 @@
       object-fit: contain;
       padding: 8px;
     }
+    .text-thumb {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      display: grid;
+      place-items: center;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background:
+        linear-gradient(135deg, rgba(29, 111, 122, 0.16), rgba(255, 250, 240, 0.9)),
+        #ffffff;
+      color: #164e63;
+      font-weight: 700;
+      font-size: 22px;
+      text-align: center;
+    }
     h2 {
       margin: 0;
       font-size: 19px;
@@ -117,6 +133,57 @@
     </header>
 
     <section class="grid" aria-label="Examples">
+      <a class="project" href="lovable-koodimine/">
+        <div class="text-thumb" aria-hidden="true">Lovable.dev</div>
+        <h2>Koodimine Lovable.dev platvormil</h2>
+        <p class="desc">Eestikeelne juhis Lovable’is veebirakenduste loomiseks, avaldamiseks ja telefoni lisamiseks.</p>
+        <div class="meta">
+          <span class="tag">AI</span>
+          <span class="tag">Veebirakendus</span>
+        </div>
+      </a>
+
+      <a class="project" href="codex-koodimine/">
+        <div class="text-thumb" aria-hidden="true">Codex</div>
+        <h2>Koodimine Codexi abil</h2>
+        <p class="desc">Lühike praktiline juhis, kuidas kasutada Codexit koodi uurimiseks, muutmiseks ja testimiseks.</p>
+        <div class="meta">
+          <span class="tag">AI</span>
+          <span class="tag">Koodiagent</span>
+        </div>
+      </a>
+
+      <a class="project" href="claude-code-koodimine/">
+        <div class="text-thumb" aria-hidden="true">Claude Code</div>
+        <h2>Koodimine Claude Code'i abil</h2>
+        <p class="desc">Lühike juhis Claude Code app'i ja CLI kasutamiseks koodibaasis töötamisel.</p>
+        <div class="meta">
+          <span class="tag">AI</span>
+          <span class="tag">CLI</span>
+          <span class="tag">App</span>
+        </div>
+      </a>
+
+      <a class="project" href="vibe-coding-platvormid/">
+        <div class="text-thumb" aria-hidden="true">Vibe coding</div>
+        <h2>Vibe coding platvormid</h2>
+        <p class="desc">Soovituslik järjestus tudengitele sobivatest AI-koodiplatvormidest koos tugevuste ja nõrkustega.</p>
+        <div class="meta">
+          <span class="tag">Võrdlus</span>
+          <span class="tag">AI</span>
+        </div>
+      </a>
+
+      <a class="project" href="puhuripall/">
+        <img class="thumb" src="puhuripall/thumbnail.svg" alt="Puhuripalli mängu eelvaade" />
+        <h2>Puhuripall</h2>
+        <p class="desc">Puhta JavaScriptiga canvas-mäng: juhi ratastel puhurit ja aja aeglustuv pall väravasse postide vahelt.</p>
+        <div class="meta">
+          <span class="tag">JavaScript</span>
+          <span class="tag">Mäng</span>
+        </div>
+      </a>
+
       <a class="project" href="trajectory-plot/">
         <img class="thumb" src="trajectory-plot/trajectory_plot.png" alt="Projectile trajectory plot" />
         <h2>Ball Throw Trajectories</h2>

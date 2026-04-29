@@ -9,6 +9,11 @@ copy as a static website and easy to clone as a collection of runnable examples.
 
 | Example | Folder | What it shows |
 | --- | --- | --- |
+| Koodimine Lovable.dev platvormil | `lovable-koodimine/` | Eestikeelne juhis Lovable’is rakenduste loomiseks ja telefoni lisamiseks |
+| Koodimine Codexi abil | `codex-koodimine/` | Lühike eestikeelne juhis Codexi kasutamiseks koodi uurimisel, muutmisel ja testimisel |
+| Koodimine Claude Code'i abil | `claude-code-koodimine/` | Lühike eestikeelne juhis Claude Code app'i ja CLI kasutamiseks |
+| Vibe coding platvormid | `vibe-coding-platvormid/` | Soovituslik järjestus tudengitele sobivatest AI-koodiplatvormidest |
+| Puhuripall | `puhuripall/` | Puhta JavaScriptiga canvas-mäng palli, puhuri, postide ja väravaga |
 | Ball throw trajectories | `trajectory-plot/` | Matplotlib projectile trajectories with varying angle and speed |
 | Polygon row patterns | `shapes-first-program/` | PIL regular polygons, gradients, rows, and generated image output |
 | Grid lines | `grid-lines/` | PIL grid drawing with pastel cells and line thickness/color gradients |

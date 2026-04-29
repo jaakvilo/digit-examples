@@ -1,0 +1,559 @@
+<!doctype html>
+<html lang="et">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Puhuripall</title>
+  <style>
+    :root {
+      --bg: #eef5ef;
+      --field: #6fad73;
+      --field-dark: #5b9e62;
+      --ink: #17202a;
+      --muted: #5d6773;
+      --panel: #fffaf0;
+      --line: #d9d1c2;
+      --accent: #1d6f7a;
+      --danger: #ba3b35;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "IBM Plex Sans", "Source Sans 3", system-ui, sans-serif;
+      color: var(--ink);
+      background: linear-gradient(180deg, #ffffff 0%, var(--bg) 100%);
+      display: grid;
+      place-items: center;
+      padding: 18px;
+    }
+    main {
+      width: min(1100px, 100%);
+      display: grid;
+      gap: 12px;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    h1 {
+      margin: 0;
+      font-size: clamp(28px, 5vw, 44px);
+      line-height: 1;
+      letter-spacing: 0;
+    }
+    a {
+      color: var(--accent);
+      text-decoration-thickness: 1px;
+      text-underline-offset: 3px;
+    }
+    .hud {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .pill {
+      min-width: 96px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      padding: 8px 10px;
+      font-weight: 700;
+      font-size: 14px;
+    }
+    button {
+      border: 1px solid #9bc3c4;
+      border-radius: 8px;
+      background: #eef9f7;
+      color: #164e63;
+      font: inherit;
+      font-weight: 700;
+      padding: 8px 12px;
+      cursor: pointer;
+    }
+    button:hover,
+    button:focus-visible {
+      border-color: var(--accent);
+      outline: none;
+    }
+    .game-shell {
+      border: 1px solid #8abd8b;
+      border-radius: 8px;
+      overflow: hidden;
+      background: var(--field);
+      box-shadow: 0 16px 36px rgba(23, 32, 42, 0.16);
+      touch-action: none;
+    }
+    canvas {
+      width: 100%;
+      aspect-ratio: 16 / 10;
+      display: block;
+      cursor: none;
+      background: var(--field);
+    }
+    .status {
+      min-height: 24px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.4;
+    }
+    @media (max-width: 620px) {
+      body { padding: 12px; }
+      .pill { min-width: 0; }
+      canvas { aspect-ratio: 4 / 5; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <div>
+        <a href="../">Tagasi näidete juurde</a>
+        <h1>Puhuripall</h1>
+      </div>
+      <div class="hud" aria-label="Mängu seis">
+        <div class="pill">Skoor: <span id="score">0</span></div>
+        <div class="pill">Postipõrked: <span id="postHits">0</span></div>
+        <div class="pill">Tase: <span id="level">1</span></div>
+        <button id="reset" type="button">Uus mäng</button>
+      </div>
+    </header>
+
+    <div class="game-shell">
+      <canvas id="game" width="960" height="600" aria-label="Puhuripalli mänguväli"></canvas>
+    </div>
+    <div class="status" id="status">Juhi puhurit hiirega või puudutusega. Puhuri nina saab palli ka kergelt müksata, kui ta seina äärde kinni jääb.</div>
+  </main>
+
+  <script>
+    const canvas = document.getElementById("game");
+    const ctx = canvas.getContext("2d");
+    const scoreEl = document.getElementById("score");
+    const postHitsEl = document.getElementById("postHits");
+    const levelEl = document.getElementById("level");
+    const statusEl = document.getElementById("status");
+    const resetBtn = document.getElementById("reset");
+
+    const W = 960;
+    const H = 600;
+    const ballStart = { x: 96, y: H / 2 };
+    const goal = { x: W - 54, y: H / 2 - 82, w: 32, h: 164 };
+    const ball = { x: ballStart.x, y: ballStart.y, vx: 0, vy: 0, r: 15 };
+    const blower = {
+      head: { x: 230, y: H / 2 + 105 },
+      prevHead: { x: 230, y: H / 2 + 105 },
+      velocity: { x: 0, y: 0 },
+      tail: { x: 170, y: H / 2 + 125 },
+      angle: 0,
+      length: 86,
+      power: 1280,
+      range: 175,
+      wheelPhase: 0
+    };
+
+    let score = 0;
+    let postHits = 0;
+    let level = 1;
+    let running = true;
+    let messageTimer = 0;
+    let lastTime = 0;
+    let pointer = { x: blower.head.x, y: blower.head.y, active: false };
+
+    const basePosts = [
+      { x: 305, y: 150, r: 22 },
+      { x: 305, y: 450, r: 22 },
+      { x: 470, y: 265, r: 24 },
+      { x: 585, y: 112, r: 21 },
+      { x: 610, y: 430, r: 24 },
+      { x: 744, y: 292, r: 22 }
+    ];
+
+    function postsForLevel() {
+      const wiggle = Math.min(34, (level - 1) * 7);
+      return basePosts.map((p, i) => ({
+        x: p.x + Math.sin(level * 1.7 + i) * wiggle,
+        y: p.y + Math.cos(level * 1.2 + i * 0.8) * wiggle * 0.75,
+        r: p.r
+      }));
+    }
+
+    function clamp(v, min, max) {
+      return Math.max(min, Math.min(max, v));
+    }
+
+    function resetBall(text) {
+      ball.x = ballStart.x;
+      ball.y = ballStart.y;
+      ball.vx = 0;
+      ball.vy = 0;
+      blower.head.x = 230;
+      blower.head.y = H / 2 + 105;
+      blower.prevHead.x = blower.head.x;
+      blower.prevHead.y = blower.head.y;
+      blower.velocity.x = 0;
+      blower.velocity.y = 0;
+      blower.tail.x = 170;
+      blower.tail.y = H / 2 + 125;
+      pointer.x = blower.head.x;
+      pointer.y = blower.head.y;
+      showMessage(text);
+    }
+
+    function showMessage(text) {
+      statusEl.textContent = text;
+      messageTimer = 2.4;
+    }
+
+    function fullReset() {
+      score = 0;
+      postHits = 0;
+      level = 1;
+      scoreEl.textContent = score;
+      postHitsEl.textContent = postHits;
+      levelEl.textContent = level;
+      resetBall("Uus mäng. Aja pall väravasse ja väldi poste.");
+    }
+
+    function setPointerFromEvent(event) {
+      const rect = canvas.getBoundingClientRect();
+      const client = event.touches ? event.touches[0] : event;
+      pointer.x = ((client.clientX - rect.left) / rect.width) * W;
+      pointer.y = ((client.clientY - rect.top) / rect.height) * H;
+      pointer.active = true;
+    }
+
+    canvas.addEventListener("mousemove", setPointerFromEvent);
+    canvas.addEventListener("mouseenter", setPointerFromEvent);
+    canvas.addEventListener("touchstart", event => {
+      event.preventDefault();
+      setPointerFromEvent(event);
+    }, { passive: false });
+    canvas.addEventListener("touchmove", event => {
+      event.preventDefault();
+      setPointerFromEvent(event);
+    }, { passive: false });
+    resetBtn.addEventListener("click", fullReset);
+
+    function updateBlower(dt) {
+      blower.prevHead.x = blower.head.x;
+      blower.prevHead.y = blower.head.y;
+      const dx = pointer.x - blower.head.x;
+      const dy = pointer.y - blower.head.y;
+      const follow = Math.min(1, dt * 12);
+      blower.head.x += dx * follow;
+      blower.head.y += dy * follow;
+      blower.head.x = clamp(blower.head.x, 42, W - 42);
+      blower.head.y = clamp(blower.head.y, 42, H - 42);
+      blower.velocity.x = (blower.head.x - blower.prevHead.x) / Math.max(0.001, dt);
+      blower.velocity.y = (blower.head.y - blower.prevHead.y) / Math.max(0.001, dt);
+
+      const tx = blower.tail.x;
+      const ty = blower.tail.y;
+      const hx = blower.head.x;
+      const hy = blower.head.y;
+      const angle = Math.atan2(hy - ty, hx - tx);
+      blower.angle = angle;
+      const targetTailX = hx - Math.cos(angle) * blower.length;
+      const targetTailY = hy - Math.sin(angle) * blower.length;
+      blower.tail.x += (targetTailX - blower.tail.x) * Math.min(1, dt * 7);
+      blower.tail.y += (targetTailY - blower.tail.y) * Math.min(1, dt * 7);
+      blower.wheelPhase += Math.hypot(dx, dy) * 0.02;
+    }
+
+    function updateBall(dt) {
+      const noseX = blower.head.x + Math.cos(blower.angle) * 25;
+      const noseY = blower.head.y + Math.sin(blower.angle) * 25;
+      const dx = ball.x - noseX;
+      const dy = ball.y - noseY;
+      const dist = Math.hypot(dx, dy);
+      const flowDirX = Math.cos(blower.angle);
+      const flowDirY = Math.sin(blower.angle);
+      const along = dx * flowDirX + dy * flowDirY;
+      const nearField = 72;
+
+      if (dist < blower.range && along > -nearField) {
+        const distanceFalloff = Math.pow(1 - dist / blower.range, 1.85);
+        const frontAlignment = clamp(along / Math.max(1, dist), -0.25, 1);
+        const forwardShare = clamp(0.35 + frontAlignment * 0.65, 0.08, 1);
+        const nearShare = Math.pow(clamp(1 - dist / nearField, 0, 1), 1.2);
+        const awayX = dx / Math.max(1, dist);
+        const awayY = dy / Math.max(1, dist);
+        const force = blower.power * distanceFalloff;
+
+        ball.vx += flowDirX * force * forwardShare * dt;
+        ball.vy += flowDirY * force * forwardShare * dt;
+
+        if (nearShare > 0) {
+          const rescueForce = blower.power * 0.82 * nearShare;
+          ball.vx += awayX * rescueForce * dt;
+          ball.vy += awayY * rescueForce * dt;
+        }
+      }
+
+      const bumperRadius = 28;
+      const hitDist = Math.max(1, dist);
+      if (hitDist < ball.r + bumperRadius) {
+        const nx = dx / hitDist;
+        const ny = dy / hitDist;
+        const overlap = ball.r + bumperRadius - hitDist;
+        ball.x += nx * overlap;
+        ball.y += ny * overlap;
+
+        const relativeSpeed = (blower.velocity.x - ball.vx) * nx + (blower.velocity.y - ball.vy) * ny;
+        const shove = Math.max(220, relativeSpeed * 0.72);
+        ball.vx += nx * shove;
+        ball.vy += ny * shove;
+
+        const tangentX = -ny;
+        const tangentY = nx;
+        const tangentSpeed = blower.velocity.x * tangentX + blower.velocity.y * tangentY;
+        ball.vx += tangentX * tangentSpeed * 0.24;
+        ball.vy += tangentY * tangentSpeed * 0.24;
+      }
+
+      const drag = Math.pow(0.43, dt);
+      ball.vx *= drag;
+      ball.vy *= drag;
+      ball.x += ball.vx * dt;
+      ball.y += ball.vy * dt;
+
+      if (ball.x < ball.r) {
+        ball.x = ball.r;
+        ball.vx = Math.abs(ball.vx) * 0.68 + 32;
+        ball.vy *= 0.88;
+      }
+      if (ball.x > W - ball.r) {
+        ball.x = W - ball.r;
+        ball.vx = -Math.abs(ball.vx) * 0.68 - 32;
+        ball.vy *= 0.88;
+      }
+      if (ball.y < ball.r) {
+        ball.y = ball.r;
+        ball.vy = Math.abs(ball.vy) * 0.68 + 32;
+        ball.vx *= 0.88;
+      }
+      if (ball.y > H - ball.r) {
+        ball.y = H - ball.r;
+        ball.vy = -Math.abs(ball.vy) * 0.68 - 32;
+        ball.vx *= 0.88;
+      }
+    }
+
+    function checkGameState() {
+      for (const post of postsForLevel()) {
+        const dx = ball.x - post.x;
+        const dy = ball.y - post.y;
+        const dist = Math.max(1, Math.hypot(dx, dy));
+        const minDist = ball.r + post.r;
+        if (dist < minDist) {
+          const nx = dx / dist;
+          const ny = dy / dist;
+          const overlap = minDist - dist;
+          ball.x += nx * overlap;
+          ball.y += ny * overlap;
+
+          const normalSpeed = ball.vx * nx + ball.vy * ny;
+          if (normalSpeed < 0) {
+            ball.vx -= 1.72 * normalSpeed * nx;
+            ball.vy -= 1.72 * normalSpeed * ny;
+          } else {
+            ball.vx += nx * 90;
+            ball.vy += ny * 90;
+          }
+
+          postHits += 1;
+          postHitsEl.textContent = postHits;
+          showMessage("Postipõrge! Pall põrkas tagasi.");
+        }
+      }
+
+      if (
+        ball.x + ball.r > goal.x &&
+        ball.x - ball.r < goal.x + goal.w &&
+        ball.y > goal.y &&
+        ball.y < goal.y + goal.h
+      ) {
+        score += 1;
+        level += 1;
+        scoreEl.textContent = score;
+        levelEl.textContent = level;
+        resetBall("Värav! Järgmine tase nihutab poste natuke.");
+      }
+    }
+
+    function update(dt) {
+      updateBlower(dt);
+      updateBall(dt);
+      checkGameState();
+      if (messageTimer > 0) {
+        messageTimer -= dt;
+        if (messageTimer <= 0) {
+          statusEl.textContent = "Kui pall jääb seina äärde, lükka puhuri nina pallile lähedale: lähedal tuul tugevneb ja nina annab väikese müksu.";
+        }
+      }
+    }
+
+    function drawField() {
+      ctx.fillStyle = "#6fad73";
+      ctx.fillRect(0, 0, W, H);
+      for (let x = 0; x < W; x += 80) {
+        ctx.fillStyle = x % 160 === 0 ? "#69a96f" : "#72b579";
+        ctx.fillRect(x, 0, 80, H);
+      }
+
+      ctx.strokeStyle = "rgba(255,255,255,0.55)";
+      ctx.lineWidth = 3;
+      ctx.strokeRect(24, 24, W - 48, H - 48);
+      ctx.beginPath();
+      ctx.moveTo(W / 2, 24);
+      ctx.lineTo(W / 2, H - 24);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.arc(W / 2, H / 2, 68, 0, Math.PI * 2);
+      ctx.stroke();
+
+      ctx.fillStyle = "#f7f4ee";
+      ctx.fillRect(goal.x, goal.y, goal.w, goal.h);
+      ctx.strokeStyle = "#164e63";
+      ctx.lineWidth = 5;
+      ctx.strokeRect(goal.x, goal.y, goal.w, goal.h);
+      ctx.fillStyle = "#164e63";
+      ctx.font = "700 16px system-ui, sans-serif";
+      ctx.textAlign = "center";
+      ctx.fillText("VÄRAV", goal.x + goal.w / 2, goal.y - 12);
+    }
+
+    function drawPosts() {
+      for (const post of postsForLevel()) {
+        const grad = ctx.createRadialGradient(post.x - 7, post.y - 7, 4, post.x, post.y, post.r);
+        grad.addColorStop(0, "#ffe7de");
+        grad.addColorStop(0.52, "#df5c49");
+        grad.addColorStop(1, "#8b2825");
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(post.x, post.y, post.r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = "#fff6ed";
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.arc(post.x, post.y, post.r * 0.52, 0, Math.PI * 2);
+        ctx.stroke();
+      }
+    }
+
+    function drawBall() {
+      const grad = ctx.createRadialGradient(ball.x - 6, ball.y - 7, 3, ball.x, ball.y, ball.r);
+      grad.addColorStop(0, "#ffffff");
+      grad.addColorStop(0.58, "#f8d36f");
+      grad.addColorStop(1, "#c4841d");
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.arc(ball.x, ball.y, ball.r, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = "#704d13";
+      ctx.lineWidth = 2;
+      ctx.stroke();
+    }
+
+    function drawBlower() {
+      const hx = blower.head.x;
+      const hy = blower.head.y;
+      const tx = blower.tail.x;
+      const ty = blower.tail.y;
+      const a = blower.angle;
+      const nx = Math.cos(a);
+      const ny = Math.sin(a);
+      const px = -ny;
+      const py = nx;
+
+      const noseX = hx + nx * 30;
+      const noseY = hy + ny * 30;
+      const dist = Math.hypot(ball.x - noseX, ball.y - noseY);
+      const cone = Math.max(0, 1 - dist / blower.range);
+
+      ctx.save();
+      ctx.globalAlpha = 0.18 + cone * 0.24;
+      ctx.fillStyle = "#d8f5ff";
+      ctx.beginPath();
+      ctx.moveTo(noseX, noseY);
+      ctx.lineTo(noseX + nx * blower.range + px * 58, noseY + ny * blower.range + py * 58);
+      ctx.lineTo(noseX + nx * blower.range - px * 58, noseY + ny * blower.range - py * 58);
+      ctx.closePath();
+      ctx.fill();
+      ctx.restore();
+
+      ctx.strokeStyle = "#26323a";
+      ctx.lineWidth = 18;
+      ctx.lineCap = "round";
+      ctx.beginPath();
+      ctx.moveTo(tx, ty);
+      ctx.lineTo(hx, hy);
+      ctx.stroke();
+
+      ctx.strokeStyle = "#7fb7c2";
+      ctx.lineWidth = 10;
+      ctx.beginPath();
+      ctx.moveTo(tx + nx * 8, ty + ny * 8);
+      ctx.lineTo(hx - nx * 8, hy - ny * 8);
+      ctx.stroke();
+
+      ctx.fillStyle = "#164e63";
+      ctx.beginPath();
+      ctx.moveTo(hx + nx * 36, hy + ny * 36);
+      ctx.lineTo(hx - nx * 8 + px * 18, hy - ny * 8 + py * 18);
+      ctx.lineTo(hx - nx * 8 - px * 18, hy - ny * 8 - py * 18);
+      ctx.closePath();
+      ctx.fill();
+
+      drawWheel(tx + px * 18, ty + py * 18, 12);
+      drawWheel(tx - px * 18, ty - py * 18, 12);
+      drawWheel(hx - nx * 26 + px * 17, hy - ny * 26 + py * 17, 9);
+      drawWheel(hx - nx * 26 - px * 17, hy - ny * 26 - py * 17, 9);
+
+      ctx.fillStyle = "#0f172a";
+      ctx.beginPath();
+      ctx.arc(hx, hy, 5, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    function drawWheel(x, y, r) {
+      ctx.fillStyle = "#1f2937";
+      ctx.beginPath();
+      ctx.arc(x, y, r, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = "#d1d5db";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(x, y, r * 0.55, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(x + Math.cos(blower.wheelPhase) * r * 0.75, y + Math.sin(blower.wheelPhase) * r * 0.75);
+      ctx.lineTo(x - Math.cos(blower.wheelPhase) * r * 0.75, y - Math.sin(blower.wheelPhase) * r * 0.75);
+      ctx.stroke();
+    }
+
+    function draw() {
+      drawField();
+      drawPosts();
+      drawBlower();
+      drawBall();
+    }
+
+    function frame(time) {
+      if (!lastTime) lastTime = time;
+      const dt = Math.min(0.032, (time - lastTime) / 1000);
+      lastTime = time;
+      if (running) update(dt);
+      draw();
+      requestAnimationFrame(frame);
+    }
+
+    fullReset();
+    requestAnimationFrame(frame);
+  </script>
+</body>
+</html>
